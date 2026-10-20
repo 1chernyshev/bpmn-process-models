@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn">
+<bpmn:collaboration id="Collaboration_1">
+<bpmn:participant id="Pool_App" name="Обработка заявки на нового клиента" processRef="Process_App"/>
+</bpmn:collaboration>
+<bpmn:process id="Process_App" isExecutable="false">
+<bpmn:laneSet id="LaneSet_Process_App">
+<bpmn:lane id="Lane_C" name="КЛИЕНТ">
+<bpmn:flowNodeRef>S</bpmn:flowNodeRef>
+</bpmn:lane>
+<bpmn:lane id="Lane_M" name="МЕНЕДЖЕР">
+<bpmn:flowNodeRef>M1</bpmn:flowNodeRef>
+<bpmn:flowNodeRef>M2</bpmn:flowNodeRef>
+<bpmn:flowNodeRef>M3</bpmn:flowNodeRef>
+<bpmn:flowNodeRef>M4</bpmn:flowNodeRef>
+<bpmn:flowNodeRef>M5</bpmn:flowNodeRef>
+</bpmn:lane>
+<bpmn:lane id="Lane_A" name="СИСТЕМА А (фронтенд)">
+<bpmn:flowNodeRef>F1</bpmn:flowNodeRef>
+<bpmn:flowNodeRef>F2</bpmn:flowNodeRef>
+<bpmn:flowNodeRef>F3</bpmn:flowNodeRef>
+<bpmn:flowNodeRef>F4</bpmn:flowNodeRef>
+<bpmn:flowNodeRef>E1</bpmn:flowNodeRef>
+<bpmn:flowNodeRef>F5</bpmn:flowNodeRef>
+<bpmn:flowNodeRef>F6</bpmn:flowNodeRef>
+</bpmn:lane>
+<bpmn:lane id="Lane_B" name="СИСТЕМА Б (бэкенд)">
+<bpmn:flowNodeRef>B1</bpmn:flowNodeRef>
+<bpmn:flowNodeRef>B2</bpmn:flowNodeRef>
+<bpmn:flowNodeRef>G1</bpmn:flowNodeRef>
+<bpmn:flowNodeRef>B3</bpmn:flowNodeRef>
+<bpmn:flowNodeRef>B4</bpmn:flowNodeRef>
+<bpmn:flowNodeRef>B5</bpmn:flowNodeRef>
+<bpmn:flowNodeRef>G2</bpmn:flowNodeRef>
+<bpmn:flowNodeRef>B6</bpmn:flowNodeRef>
+<bpmn:flowNodeRef>E2</bpmn:flowNodeRef>
+</bpmn:lane>
+<bpmn:lane id="Lane_R" name="РУКОВОДИТЕЛЬ">
+<bpmn:flowNodeRef>R1</bpmn:flowNodeRef>
+<bpmn:flowNodeRef>BT</bpmn:flowNodeRef>
+<bpmn:flowNodeRef>R2</bpmn:flowNodeRef>
+<bpmn:flowNodeRef>R3</bpmn:flowNodeRef>
+</bpmn:lane>
+</bpmn:laneSet>
+<bpmn:startEvent id="S" name="Клиент пришел в клиентский отдел"><bpmn:outgoing>Fl1</bpmn:outgoing></bpmn:startEvent>
+<bpmn:userTask id="M1" name="Открыть форму новой заявки в Системе А"><bpmn:incoming>Fl1</bpmn:incoming><bpmn:outgoing>Fl2</bpmn:outgoing></bpmn:userTask>
+<bpmn:serviceTask id="F1" name="Отобразить форму новой заявки"><bpmn:incoming>Fl2</bpmn:incoming><bpmn:outgoing>Fl3</bpmn:outgoing></bpmn:serviceTask>
+<bpmn:userTask id="M2" name="Внести паспортные данные клиента"><bpmn:incoming>Fl3</bpmn:incoming><bpmn:outgoing>Fl4</bpmn:outgoing></bpmn:userTask>
+<bpmn:textAnnotation id="N1"><bpmn:text>Паспорт: серия, номер, дата выдачи, кем выдан</bpmn:text></bpmn:textAnnotation>
+<bpmn:userTask id="M3" name="Нажать кнопку «Отправить на проверку»"><bpmn:incoming>Fl4</bpmn:incoming><bpmn:outgoing>Fl5</bpmn:outgoing></bpmn:userTask>
+<bpmn:serviceTask id="F2" name="Отправить данные на проверку в Систему Б"><bpmn:incoming>Fl5</bpmn:incoming><bpmn:outgoing>Fl6</bpmn:outgoing></bpmn:serviceTask>
+<bpmn:serviceTask id="B1" name="Создать заявку, статус = На проверке"><bpmn:incoming>Fl6</bpmn:incoming><bpmn:outgoing>Fl7</bpmn:outgoing></bpmn:serviceTask>
+<bpmn:dataObjectReference id="D1" name="Заявка на нового клиента" dataObjectRef="DO_D1"/><bpmn:dataObject id="DO_D1"/>
+<bpmn:serviceTask id="B2" name="Выполнить проверку клиента"><bpmn:incoming>Fl7</bpmn:incoming><bpmn:outgoing>Fl8</bpmn:outgoing></bpmn:serviceTask>
+<bpmn:exclusiveGateway id="G1" name="Проверка пройдена?" default="Fl10"><bpmn:incoming>Fl8</bpmn:incoming><bpmn:outgoing>Fl9</bpmn:outgoing><bpmn:outgoing>Fl10</bpmn:outgoing></bpmn:exclusiveGateway>
+<bpmn:serviceTask id="B3" name="Установить статус = Проверка пройдена"><bpmn:incoming>Fl9</bpmn:incoming><bpmn:outgoing>Fl11</bpmn:outgoing></bpmn:serviceTask>
+<bpmn:serviceTask id="B4" name="Установить статус = Отказ"><bpmn:incoming>Fl10</bpmn:incoming><bpmn:outgoing>Fl12</bpmn:outgoing></bpmn:serviceTask>
+<bpmn:serviceTask id="F3" name="Отобразить менеджеру одобрение"><bpmn:incoming>Fl11</bpmn:incoming><bpmn:outgoing>Fl14</bpmn:outgoing></bpmn:serviceTask>
+<bpmn:userTask id="M4" name="Внести данные о работе и проживании"><bpmn:incoming>Fl14</bpmn:incoming><bpmn:outgoing>Fl15</bpmn:outgoing></bpmn:userTask>
+<bpmn:textAnnotation id="N2"><bpmn:text>Место работы, должность, доход, адрес фактического проживания</bpmn:text></bpmn:textAnnotation>
+<bpmn:userTask id="M5" name="Нажать «Перевести на руководителя»"><bpmn:incoming>Fl15</bpmn:incoming><bpmn:outgoing>Fl16</bpmn:outgoing></bpmn:userTask>
+<bpmn:serviceTask id="F4" name="Отобразить менеджеру отказ"><bpmn:incoming>Fl12</bpmn:incoming><bpmn:outgoing>Fl13</bpmn:outgoing></bpmn:serviceTask>
+<bpmn:endEvent id="E1" name="Отказ по заявке"><bpmn:incoming>Fl13</bpmn:incoming></bpmn:endEvent>
+<bpmn:serviceTask id="F5" name="Отправить заявку на согласование руководителю"><bpmn:incoming>Fl16</bpmn:incoming><bpmn:outgoing>Fl17</bpmn:outgoing></bpmn:serviceTask>
+<bpmn:serviceTask id="B5" name="Установить статус = На согласовании"><bpmn:incoming>Fl17</bpmn:incoming><bpmn:outgoing>Fl18</bpmn:outgoing></bpmn:serviceTask>
+<bpmn:userTask id="R1" name="Открыть заявку в Системе А"><bpmn:incoming>Fl18</bpmn:incoming><bpmn:outgoing>Fl19</bpmn:outgoing></bpmn:userTask>
+<bpmn:boundaryEvent id="BT" name="2 дня" attachedToRef="R1" cancelActivity="true"><bpmn:outgoing>Fl23</bpmn:outgoing><bpmn:timerEventDefinition id="TED_BT"><bpmn:timeDuration xsi:type="bpmn:tFormalExpression">P2D</bpmn:timeDuration></bpmn:timerEventDefinition></bpmn:boundaryEvent>
+<bpmn:userTask id="R2" name="Проверить данные заявки"><bpmn:incoming>Fl19</bpmn:incoming><bpmn:outgoing>Fl20</bpmn:outgoing></bpmn:userTask>
+<bpmn:userTask id="R3" name="Нажать кнопку «Согласовать»"><bpmn:incoming>Fl20</bpmn:incoming><bpmn:outgoing>Fl21</bpmn:outgoing></bpmn:userTask>
+<bpmn:serviceTask id="F6" name="Отправить согласование в Систему Б"><bpmn:incoming>Fl21</bpmn:incoming><bpmn:outgoing>Fl22</bpmn:outgoing></bpmn:serviceTask>
+<bpmn:exclusiveGateway id="G2" name=""><bpmn:incoming>Fl22</bpmn:incoming><bpmn:incoming>Fl23</bpmn:incoming><bpmn:outgoing>Fl24</bpmn:outgoing></bpmn:exclusiveGateway>
+<bpmn:serviceTask id="B6" name="Установить статус = Согласована"><bpmn:incoming>Fl24</bpmn:incoming><bpmn:outgoing>Fl25</bpmn:outgoing></bpmn:serviceTask>
+<bpmn:endEvent id="E2" name="Заявка согласована"><bpmn:incoming>Fl25</bpmn:incoming></bpmn:endEvent>
+<bpmn:sequenceFlow id="Fl1" name="" sourceRef="S" targetRef="M1"/>
+<bpmn:sequenceFlow id="Fl2" name="" sourceRef="M1" targetRef="F1"/>
+<bpmn:sequenceFlow id="Fl3" name="" sourceRef="F1" targetRef="M2"/>
+<bpmn:sequenceFlow id="Fl4" name="" sourceRef="M2" targetRef="M3"/>
+<bpmn:sequenceFlow id="Fl5" name="" sourceRef="M3" targetRef="F2"/>
+<bpmn:sequenceFlow id="Fl6" name="" sourceRef="F2" targetRef="B1"/>
+<bpmn:sequenceFlow id="Fl7" name="" sourceRef="B1" targetRef="B2"/>
+<bpmn:sequenceFlow id="Fl8" name="" sourceRef="B2" targetRef="G1"/>
+<bpmn:sequenceFlow id="Fl9" name="да" sourceRef="G1" targetRef="B3"/>
+<bpmn:sequenceFlow id="Fl10" name="нет" sourceRef="G1" targetRef="B4"/>
+<bpmn:sequenceFlow id="Fl11" name="" sourceRef="B3" targetRef="F3"/>
+<bpmn:sequenceFlow id="Fl12" name="" sourceRef="B4" targetRef="F4"/>
+<bpmn:sequenceFlow id="Fl13" name="" sourceRef="F4" targetRef="E1"/>
+<bpmn:sequenceFlow id="Fl14" name="" sourceRef="F3" targetRef="M4"/>
+<bpmn:sequenceFlow id="Fl15" name="" sourceRef="M4" targetRef="M5"/>
+<bpmn:sequenceFlow id="Fl16" name="" sourceRef="M5" targetRef="F5"/>
+<bpmn:sequenceFlow id="Fl17" name="" sourceRef="F5" targetRef="B5"/>
+<bpmn:sequenceFlow id="Fl18" name="" sourceRef="B5" targetRef="R1"/>
+<bpmn:sequenceFlow id="Fl19" name="" sourceRef="R1" targetRef="R2"/>
+<bpmn:sequenceFlow id="Fl20" name="" sourceRef="R2" targetRef="R3"/>
+<bpmn:sequenceFlow id="Fl21" name="" sourceRef="R3" targetRef="F6"/>
+<bpmn:sequenceFlow id="Fl22" name="" sourceRef="F6" targetRef="G2"/>
+<bpmn:sequenceFlow id="Fl23" name="" sourceRef="BT" targetRef="G2"/>
+<bpmn:sequenceFlow id="Fl24" name="" sourceRef="G2" targetRef="B6"/>
+<bpmn:sequenceFlow id="Fl25" name="" sourceRef="B6" targetRef="E2"/>
+<bpmn:association id="Assoc_Process_App_0" sourceRef="B1" targetRef="D1"/>
+<bpmn:association id="Assoc_Process_App_1" sourceRef="M2" targetRef="N1"/>
+<bpmn:association id="Assoc_Process_App_2" sourceRef="M4" targetRef="N2"/>
+</bpmn:process>
+<bpmndi:BPMNDiagram id="BPMNDiagram_1"><bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1">
+<bpmndi:BPMNShape id="Pool_App_di" bpmnElement="Pool_App" isHorizontal="true"><dc:Bounds x="40" y="20" width="3240" height="800"/></bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="Lane_C_di" bpmnElement="Lane_C" isHorizontal="true"><dc:Bounds x="70" y="20" width="3210" height="120"/></bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="Lane_M_di" bpmnElement="Lane_M" isHorizontal="true"><dc:Bounds x="70" y="140" width="3210" height="150"/></bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="Lane_A_di" bpmnElement="Lane_A" isHorizontal="true"><dc:Bounds x="70" y="290" width="3210" height="140"/></bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="Lane_B_di" bpmnElement="Lane_B" isHorizontal="true"><dc:Bounds x="70" y="430" width="3210" height="220"/></bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="Lane_R_di" bpmnElement="Lane_R" isHorizontal="true"><dc:Bounds x="70" y="650" width="3210" height="170"/></bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="S_di" bpmnElement="S"><dc:Bounds x="142.0" y="62.0" width="36" height="36"/>
+<bpmndi:BPMNLabel><dc:Bounds x="105" y="27" width="110" height="27"/></bpmndi:BPMNLabel>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="M1_di" bpmnElement="M1"><dc:Bounds x="230.0" y="175.0" width="100" height="80"/>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="F1_di" bpmnElement="F1"><dc:Bounds x="375.0" y="320.0" width="100" height="80"/>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="M2_di" bpmnElement="M2"><dc:Bounds x="520.0" y="175.0" width="100" height="80"/>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="N1_di" bpmnElement="N1"><dc:Bounds x="525.0" y="48.0" width="230" height="44"/>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="M3_di" bpmnElement="M3"><dc:Bounds x="665.0" y="175.0" width="100" height="80"/>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="F2_di" bpmnElement="F2"><dc:Bounds x="810.0" y="320.0" width="100" height="80"/>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="B1_di" bpmnElement="B1"><dc:Bounds x="955.0" y="450.0" width="100" height="80"/>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="D1_di" bpmnElement="D1"><dc:Bounds x="987.0" y="572.0" width="36" height="50"/>
+<bpmndi:BPMNLabel><dc:Bounds x="950" y="626.0" width="110" height="27"/></bpmndi:BPMNLabel>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="B2_di" bpmnElement="B2"><dc:Bounds x="1100.0" y="450.0" width="100" height="80"/>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="G1_di" bpmnElement="G1" isMarkerVisible="true"><dc:Bounds x="1255.0" y="465.0" width="50" height="50"/>
+<bpmndi:BPMNLabel><dc:Bounds x="1225" y="519.0" width="110" height="27"/></bpmndi:BPMNLabel>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="B3_di" bpmnElement="B3"><dc:Bounds x="1350.0" y="450.0" width="100" height="80"/>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="B4_di" bpmnElement="B4"><dc:Bounds x="1350.0" y="550.0" width="100" height="80"/>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="F3_di" bpmnElement="F3"><dc:Bounds x="1495.0" y="320.0" width="100" height="80"/>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="M4_di" bpmnElement="M4"><dc:Bounds x="1645.0" y="175.0" width="100" height="80"/>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="N2_di" bpmnElement="N2"><dc:Bounds x="1625.0" y="48.0" width="240" height="44"/>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="M5_di" bpmnElement="M5"><dc:Bounds x="1790.0" y="175.0" width="100" height="80"/>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="F4_di" bpmnElement="F4"><dc:Bounds x="1810.0" y="320.0" width="100" height="80"/>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="E1_di" bpmnElement="E1"><dc:Bounds x="1942.0" y="342.0" width="36" height="36"/>
+<bpmndi:BPMNLabel><dc:Bounds x="1905" y="381" width="110" height="27"/></bpmndi:BPMNLabel>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="F5_di" bpmnElement="F5"><dc:Bounds x="2030.0" y="320.0" width="100" height="80"/>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="B5_di" bpmnElement="B5"><dc:Bounds x="2175.0" y="450.0" width="100" height="80"/>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="R1_di" bpmnElement="R1"><dc:Bounds x="2320.0" y="675.0" width="100" height="80"/>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="BT_di" bpmnElement="BT"><dc:Bounds x="2382.0" y="737.0" width="36" height="36"/>
+<bpmndi:BPMNLabel><dc:Bounds x="2369" y="760" width="110" height="27"/></bpmndi:BPMNLabel>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="R2_di" bpmnElement="R2"><dc:Bounds x="2465.0" y="675.0" width="100" height="80"/>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="R3_di" bpmnElement="R3"><dc:Bounds x="2610.0" y="675.0" width="100" height="80"/>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="F6_di" bpmnElement="F6"><dc:Bounds x="2755.0" y="320.0" width="100" height="80"/>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="G2_di" bpmnElement="G2" isMarkerVisible="true"><dc:Bounds x="2925.0" y="465.0" width="50" height="50"/>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="B6_di" bpmnElement="B6"><dc:Bounds x="3030.0" y="450.0" width="100" height="80"/>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="E2_di" bpmnElement="E2"><dc:Bounds x="3182.0" y="472.0" width="36" height="36"/>
+<bpmndi:BPMNLabel><dc:Bounds x="3145" y="512.0" width="110" height="27"/></bpmndi:BPMNLabel>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNEdge id="Fl1_di" bpmnElement="Fl1"><di:waypoint x="178" y="80"/><di:waypoint x="205" y="80"/><di:waypoint x="205" y="215"/><di:waypoint x="230" y="215"/>
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="Fl2_di" bpmnElement="Fl2"><di:waypoint x="330" y="215"/><di:waypoint x="355" y="215"/><di:waypoint x="355" y="360"/><di:waypoint x="375" y="360"/>
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="Fl3_di" bpmnElement="Fl3"><di:waypoint x="475" y="360"/><di:waypoint x="497" y="360"/><di:waypoint x="497" y="215"/><di:waypoint x="520" y="215"/>
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="Fl4_di" bpmnElement="Fl4"><di:waypoint x="620" y="215"/><di:waypoint x="665" y="215"/>
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="Fl5_di" bpmnElement="Fl5"><di:waypoint x="765" y="215"/><di:waypoint x="787" y="215"/><di:waypoint x="787" y="360"/><di:waypoint x="810" y="360"/>
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="Fl6_di" bpmnElement="Fl6"><di:waypoint x="910" y="360"/><di:waypoint x="932" y="360"/><di:waypoint x="932" y="490"/><di:waypoint x="955" y="490"/>
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="Fl7_di" bpmnElement="Fl7"><di:waypoint x="1055" y="490"/><di:waypoint x="1100" y="490"/>
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="Fl8_di" bpmnElement="Fl8"><di:waypoint x="1200" y="490"/><di:waypoint x="1255" y="490"/>
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="Fl9_di" bpmnElement="Fl9"><di:waypoint x="1305" y="490"/><di:waypoint x="1350" y="490"/>
+<bpmndi:BPMNLabel><dc:Bounds x="1311" y="471" width="60" height="14"/></bpmndi:BPMNLabel>
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="Fl10_di" bpmnElement="Fl10"><di:waypoint x="1280" y="515"/><di:waypoint x="1280" y="590"/><di:waypoint x="1350" y="590"/>
+<bpmndi:BPMNLabel><dc:Bounds x="1287" y="537" width="60" height="14"/></bpmndi:BPMNLabel>
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="Fl11_di" bpmnElement="Fl11"><di:waypoint x="1450" y="490"/><di:waypoint x="1472" y="490"/><di:waypoint x="1472" y="360"/><di:waypoint x="1495" y="360"/>
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="Fl12_di" bpmnElement="Fl12"><di:waypoint x="1450" y="590"/><di:waypoint x="1785" y="590"/><di:waypoint x="1785" y="360"/><di:waypoint x="1810" y="360"/>
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="Fl13_di" bpmnElement="Fl13"><di:waypoint x="1910" y="360"/><di:waypoint x="1942" y="360"/>
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="Fl14_di" bpmnElement="Fl14"><di:waypoint x="1595" y="360"/><di:waypoint x="1620" y="360"/><di:waypoint x="1620" y="215"/><di:waypoint x="1645" y="215"/>
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="Fl15_di" bpmnElement="Fl15"><di:waypoint x="1745" y="215"/><di:waypoint x="1790" y="215"/>
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="Fl16_di" bpmnElement="Fl16"><di:waypoint x="1890" y="215"/><di:waypoint x="2007" y="215"/><di:waypoint x="2007" y="360"/><di:waypoint x="2030" y="360"/>
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="Fl17_di" bpmnElement="Fl17"><di:waypoint x="2130" y="360"/><di:waypoint x="2152" y="360"/><di:waypoint x="2152" y="490"/><di:waypoint x="2175" y="490"/>
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="Fl18_di" bpmnElement="Fl18"><di:waypoint x="2275" y="490"/><di:waypoint x="2297" y="490"/><di:waypoint x="2297" y="715"/><di:waypoint x="2320" y="715"/>
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="Fl19_di" bpmnElement="Fl19"><di:waypoint x="2420" y="715"/><di:waypoint x="2465" y="715"/>
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="Fl20_di" bpmnElement="Fl20"><di:waypoint x="2565" y="715"/><di:waypoint x="2610" y="715"/>
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="Fl21_di" bpmnElement="Fl21"><di:waypoint x="2710" y="715"/><di:waypoint x="2732" y="715"/><di:waypoint x="2732" y="360"/><di:waypoint x="2755" y="360"/>
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="Fl22_di" bpmnElement="Fl22"><di:waypoint x="2855" y="360"/><di:waypoint x="2950" y="360"/><di:waypoint x="2950" y="465"/>
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="Fl23_di" bpmnElement="Fl23"><di:waypoint x="2400" y="773"/><di:waypoint x="2400" y="800"/><di:waypoint x="2950" y="800"/><di:waypoint x="2950" y="515"/>
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="Fl24_di" bpmnElement="Fl24"><di:waypoint x="2975" y="490"/><di:waypoint x="3030" y="490"/>
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="Fl25_di" bpmnElement="Fl25"><di:waypoint x="3130" y="490"/><di:waypoint x="3182" y="490"/>
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="Assoc_Process_App_0_di" bpmnElement="Assoc_Process_App_0"><di:waypoint x="1005" y="530"/><di:waypoint x="1005" y="572"/></bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="Assoc_Process_App_1_di" bpmnElement="Assoc_Process_App_1"><di:waypoint x="570" y="175"/><di:waypoint x="570" y="92"/></bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="Assoc_Process_App_2_di" bpmnElement="Assoc_Process_App_2"><di:waypoint x="1695" y="175"/><di:waypoint x="1695" y="92"/></bpmndi:BPMNEdge>
+</bpmndi:BPMNPlane></bpmndi:BPMNDiagram></bpmn:definitions>
